@@ -1,5 +1,5 @@
 const { body, validationResult } = require('express-validator');
-const { Admin } = require('../../models');
+const { Admin, Kategori_layanan, Layanan } = require('../../models');
 
 const registerAdminRules = () => {
   return [
@@ -46,9 +46,45 @@ const validate = (req, res, next) => {
   return res.status(400).json({ errors: extractedErrors })
 }
 
+const tambahKategoriRules = () => {
+  return [
+    body('namaKategori', 'Nama Kategori tidak boleh kosong').isLength({ min: 1 }).trim(),
+    body('namaKategori').custom(value => {
+      return Kategori_layanan.findOne({ where: { nama_kategori: value } }).then(kategori => {
+        if (kategori) {
+          return Promise.reject('Nama Kategori Telah digunakan');
+        }
+      });
+    }),
+  ]
+}
+
+const updateKategoriRules = () => {
+  return [
+    body('namaKategori', 'Nama Kategori tidak boleh kosong').isLength({ min: 1 }).trim(),
+    body('namaKategori').custom((value, {req, res}) => {
+      return Kategori_layanan.findOne({ where: { nama_kategori: value } }).then(kategori => {
+        if (kategori && kategori.nama_kategori != req.params.idKategori) {
+          return Promise.reject('Nama Kategori Telah digunakan');
+        }
+      });
+    }),
+  ]
+}
+
+const layanan = () => {
+  return [
+    body('namaLayanan', 'Nama Layanan tidak boleh kosong').isLength({ min: 1 }).trim(),
+    body('harga', 'Harga Layanan tidak boleh kosong').isLength({ min: 1 }),
+  ]
+}
+
 module.exports = {
   updateAdminRules,
   registerAdminRules,
   artikel,
+  tambahKategoriRules,
+  updateKategoriRules,
+  layanan,
   validate,
 }

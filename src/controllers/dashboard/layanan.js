@@ -48,7 +48,7 @@ module.exports = {
 
   deleteLayanan: (req, res) => {
   	Layanan.deleteLayanan(req.params.idLayanan)
-      .then(() => res.json({ msg: `Layanan: ${req.params.idLayanan} berhasil dihapus` }))
+      .then(() => res.json({ msg: `Layanan berhasil dihapus` }))
       .catch((err) => res.json(err));
   },
 

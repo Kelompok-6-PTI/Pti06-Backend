@@ -29,6 +29,7 @@ module.exports = {
         type: Sequelize.TEXT
       },
       harga: {
+        allowNull: false,
         type: Sequelize.DECIMAL
       },
       url_gambar: {

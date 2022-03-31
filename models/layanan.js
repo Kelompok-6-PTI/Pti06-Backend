@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static deleteLayanan(idLayanan){
-      return this.destroy({ where: { nama_layanan: idLayanan } });
+      return this.destroy({ where: { id: idLayanan } });
     }
 
     static updateLayanan({ namaLayanan, namaKategori, deskripsi, harga, urlGambar },idLayanan){

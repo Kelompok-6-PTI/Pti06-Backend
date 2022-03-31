@@ -2,7 +2,11 @@ const router = require('express').Router();
 const authenticate = require('../middlewares/authenticate');
 const { dashboard } = require('../controllers');
 const { auth } = require('../controllers');
-const { registerAdminRules, updateAdminRules, artikel, validate } = require('../lib/validator.js');
+const { registerAdminRules, updateAdminRules, 
+		tambahKategoriRules, updateKategoriRules,
+		layanan,
+		artikel, 
+		validate } = require('../lib/validator.js');
 
 router.use(authenticate.admin);
 
@@ -27,15 +31,15 @@ router.put('/update_artikel/:id', artikel(), validate, dashboard.crudArtikel.upd
 //------kategori--------------//
 router.get('/get_all_kategori', dashboard.layanan.getAllKategori);
 router.get('/get_kategori_by_id/:idKategori', dashboard.layanan.getKategori);
-router.post('/tambah_kategori', dashboard.layanan.tambahKategori);
+router.post('/tambah_kategori', tambahKategoriRules(), validate, dashboard.layanan.tambahKategori);
 router.delete('/delete_kategori/:idKategori', dashboard.layanan.deleteKategori);
-router.put('/update_kategori/:idKategori', dashboard.layanan.updateKategori);
+router.put('/update_kategori/:idKategori', updateKategoriRules(), validate, dashboard.layanan.updateKategori);
 //------layanan--------------//
 router.get('/get_all_layanan', dashboard.layanan.getAllLayanan);
 router.get('/get_layanan_by_id/:idLayanan', dashboard.layanan.getLayanan);
-router.post('/tambah_layanan', dashboard.layanan.tambahLayanan);
+router.post('/tambah_layanan', layanan(), validate, dashboard.layanan.tambahLayanan);
 router.delete('/delete_layanan/:idLayanan', dashboard.layanan.deleteLayanan);
-router.put('/update_layanan/:idLayanan', dashboard.layanan.updateLayanan);
+router.put('/update_layanan/:idLayanan', layanan(), validate, dashboard.layanan.updateLayanan);
 
 
 module.exports = router;
