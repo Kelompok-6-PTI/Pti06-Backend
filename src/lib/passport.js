@@ -6,7 +6,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 
 // import model admin untuk membaca data admin dari tabel admin
-const { Admin } = require('../../models');
+const { Admin, Customer } = require('../../models');
 
 const cookieExtractor = function (req) {
   let token = null;
@@ -40,14 +40,14 @@ passport.use('Admin', new JwtStrategy(options, (payload, done) => {
   });
 }));
 
-passport.use('Costomer', new JwtStrategy(options, (payload, done) => {
+passport.use('Customer', new JwtStrategy(options, (payload, done) => {
   // cari admin berdasarkan id menggunakan id yang ada di payload jwt
   // isi / payload jwt ditentukan ketika membuat jwt
-  Costomer.findOne({
+  Customer.findOne({
     where: { id: payload.id },
-  }).then((costomer) => {
+  }).then((customer) => {
     // jika admin ditemukan, oper null sebagai nilai error & data admin ke callback
-    done(null, costomer);
+    done(null, customer);
   }).catch((err) => {
     // jika terjadi error, oper error & false ke callback
     // tujuan pengoperan false adalah agar callback tahu admin gagal ditemukan

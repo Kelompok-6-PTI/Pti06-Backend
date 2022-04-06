@@ -41,5 +41,11 @@ router.post('/tambah_layanan', layanan(), validate, dashboard.layanan.tambahLaya
 router.delete('/delete_layanan/:idLayanan', dashboard.layanan.deleteLayanan);
 router.put('/update_layanan/:idLayanan', layanan(), validate, dashboard.layanan.updateLayanan);
 
+//endpoint xendit
+router.get('/get_balance', dashboard.xendit.getBalance);
+router.post('/add_costumer', dashboard.xendit.addCostumer);
+router.post('/create_invoice', dashboard.xendit.createInvoice);
+
+
 
 module.exports = router;
