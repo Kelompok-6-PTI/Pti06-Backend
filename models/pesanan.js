@@ -2,6 +2,16 @@
 const {
   Model
 } = require('sequelize');
+
+const Xendit = require('xendit-node');
+const x = new Xendit({
+  secretKey: 'xnd_development_PnCkALuy6oWwgRnoiUHWn3n0bcYbtBSxse6gNrMOMoEffpJura0SSjvVFG4S',
+});
+
+const { Invoice } = x;
+const invoiceSpecificOptions = {};
+const i = new Invoice(invoiceSpecificOptions);
+
 module.exports = (sequelize, DataTypes) => {
   class Pesanan extends Model {
     /**
@@ -19,8 +29,87 @@ module.exports = (sequelize, DataTypes) => {
       );
     }
 
-    static buatPesanan() {
-      
+    static getPesanansCostumer(idCostumer){
+      return this.findAll({where: {id_customer: idCostumer}});
+    }
+
+    static getPesananById(idPesanan){
+      return this.findByPk(idPesanan);
+    }
+
+    static buatInvoice(externalID, description, amount, items, given_names, mobile_number, ){
+      return i.createInvoice({
+                externalID: externalID,
+                description: description,
+                amount: amount,
+                items: items,
+                customer: {
+                  given_names: given_names,
+                  mobile_number: mobile_number,
+                },
+              })
+    }
+
+    static getInvoice(invoiceId){
+      return i.getInvoice({ invoiceID: invoiceId });
+    }
+
+    static expireInvoice(invoiceId){
+      return i.expireInvoice({ invoiceID: invoiceId });
+    }
+
+    static buatPesananEwallet({idCostumer, items, catatan, metodePengiriman, totalHarga, namaCustomer, noTeleponCustomer}) {
+       return this.create({ id_customer: idCostumer, 
+                           items: items, 
+                           metode_pembayaran: "Ewallet", 
+                           status_pesanan: "Belum Selesai", 
+                           catatan: catatan, 
+                           metode_pengiriman_pesanan: metodePengiriman,
+                           total_harga: totalHarga
+                         })
+                  .then((pesanan)=>{
+                    return this.buatInvoice(pesanan.id.toString(), pesanan.catatan, pesanan.total_harga, pesanan.items, namaCustomer, noTeleponCustomer )
+                    .then((invoice)=>{
+                      return this.update({invoice_id: invoice.id}, { where:{id: pesanan.id}, returning: true, plain: true })
+                      .then((updatedPesanan)=>{return updatedPesanan[1]});
+                    }).catch((e)=>{console.log(e)});   
+                  });
+    }
+
+    static buatPesananCash({idCostumer, items, catatan, metodePengiriman, totalHarga}) {
+      return this.create({
+        id_customer: idCostumer, 
+        items: items, 
+        metode_pembayaran: "Cash",
+        status_pembayaran: "Belum Dibayar",
+        status_pesanan: "Belum Selesai", 
+        catatan: catatan, 
+        metode_pengiriman_pesanan: metodePengiriman,
+        total_harga: totalHarga
+      })
+    }
+
+    static batalkanPesanan(idPesanan){
+      return this.findOne({ where: { id: idPesanan } })
+        .then((pesanan)=>{
+          if (pesanan.metode_pembayaran == "Cash") {
+            return this.destroy({ where: {id: pesanan.id} });
+          }
+          else if (pesanan.metode_pembayaran == "Ewallet"){
+            return this.getInvoice(pesanan.invoice_id)
+            .then((invoice)=>{
+              if (invoice.status == "EXPIRED") {
+                return this.destroy({ where: { id: pesanan.id } });  
+              }
+              else if (invoice.status == "PENDING") {
+                return this.expireInvoice(pesanan.invoice_id)
+                  .then((invoice)=>{
+                    return this.destroy({ where: { id: pesanan.id } });
+                  })
+              }
+            });
+          }
+        });   
     }
 
   };
@@ -31,6 +120,7 @@ module.exports = (sequelize, DataTypes) => {
     status_pembayaran: DataTypes.STRING,
     status_pesanan: DataTypes.STRING,
     catatan: DataTypes.TEXT,
+    metode_pengiriman_pesanan: DataTypes.STRING,
     total_harga: DataTypes.DECIMAL,
     invoice_id: DataTypes.STRING
   }, {

@@ -29,7 +29,6 @@ module.exports = {
         type: Sequelize.STRING
       },
       status_pembayaran: {
-        allowNull: false,
         type: Sequelize.STRING
       },
       status_pesanan: {
@@ -38,6 +37,10 @@ module.exports = {
       },
       catatan: {
         type: Sequelize.TEXT
+      },
+      metode_pengiriman_pesanan: {
+        allowNull: false,
+        type: Sequelize.STRING
       },
       total_harga: {
         allowNull: false,

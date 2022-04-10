@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       return this.create({ nama_customer: namaCustomer, no_telepon: noTelepon, password: encryptedPassword });
     }
 
-    /* Method update, untuk update Admin */
+    /* Method update, untuk update Customer */
     static async updateCustomer({ namaCustomer, noTelepon, alamat, password },id) {
       if (password != "") {
         const encryptedPassword = await this.encrypt(password);

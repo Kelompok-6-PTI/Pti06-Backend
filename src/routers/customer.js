@@ -14,19 +14,28 @@ router.get('/get_kategori_by_id/:idKategori', customer.lihatLayanan.getKategori)
 router.get('/get_all_layanan', customer.lihatLayanan.getAllLayanan);
 router.get('/get_layanan_by_id/:idLayanan', customer.lihatLayanan.getLayanan);
 
+//register
+router.post('/register_customer', customer.akunCustomer.register);
+
+//-----------------------Endpoint dibawah dan setelahnya memiliki autentikasi-----------------------
 //Endpoint customer yg sudah login dan logout
-router.get('/whoami', authenticate.customer, auth.customer.whoami); //setelah login
-router.get('/logout', authenticate.customer, auth.customer.logout); //setelah login
+router.get('/whoami', authenticate.customer, auth.customer.whoami); 
+router.get('/logout', authenticate.customer, auth.customer.logout); 
 
 //Akun Costumer
-router.post('/register_customer', customer.akunCustomer.register);
-router.put('/update_customer/:id', authenticate.customer, customer.akunCustomer.update); //setelah login
+router.put('/update_customer/:id', authenticate.customer, customer.akunCustomer.update); 
 
 //Pemesanan
+router.post('/buat_pesanan_ewallet', authenticate.customer, customer.pesanan.buatPesananEwallet); 
+router.post('/buat_pesanan_cash', authenticate.customer, customer.pesanan.buatPesananCash);
+router.delete('/batalkan_pesanan/:id', authenticate.customer, customer.pesanan.batalkanPesanan);
+router.get('/get_invoice/:idInvoice', authenticate.customer, customer.pesanan.getInvoice);
+router.get('/get_pesanans_costumer/:idCustomer', authenticate.customer, customer.pesanan.getPesanansCostumer);
+router.get('/get_pesanan_ById/:idPesanan', authenticate.customer, customer.pesanan.getPesananById);
 
 
-//-------------sementara-------------------
-router.get('/get_all_customer', customer.akunCustomer.getAllCustomer);
+
+
 
 module.exports = router;
 
