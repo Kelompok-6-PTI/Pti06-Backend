@@ -1,12 +1,18 @@
 // import model
 const { Customer } = require('../../../models');
-
+const nodemailer = require("../../lib/nodemailer");
 module.exports = {
 
   register: (req, res) => {
     Customer.register(req.body)
-      .then((customer) =>
-        res.json({ msg: `Register Berhasil` }))
+      .then((customer) =>{
+        nodemailer.sendConfirmationEmail(
+              customer.nama_customer,
+              customer.email_customer,
+              customer.confirmationCode
+            );
+        return res.json({ msg: `Register Berhasil, Silahkan melakukan verifikasi melalui Email` });
+        })
       .catch((err) => res.json(err));
   },
 

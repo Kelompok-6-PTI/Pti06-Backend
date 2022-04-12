@@ -21,33 +21,58 @@ const generateToken = (id, namaCustomer) => {
 
 module.exports = {
   login: (req, res) => {
-    const { namaCustomer, password } = req.body;
+    const { emailCustomer, password } = req.body;
 
     Customer.findOne({
-      where: { nama_customer: namaCustomer }, 
+      where: { email_customer: emailCustomer }, 
     }).then(async (customer) => {
       const match = await bcrypt.compare(password, customer.password);
 
       if (match) {
-        const accessToken = generateToken(customer.id, customer.nama_customer); 
+        const accessToken = generateToken(customer.id, customer.email_customer);
 
-        return res
+        if (customer.status != "active") {
+          return res.status(401).json({
+            message: "Akun Belum Terverifikasi, Silahkan lakukan Verifikasi melalui Email yang telah terdaftar",
+          });
+        } 
+
+        if (customer.status == "active") {
+          return res
           .cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
           })
           .status(200)
           .json({ message: 'Log in Berhasil' });
+        }
+        
       }
+
       if (!match) {
-        return res.json({ message: 'Username atau Password Salah' });
+        return res.json({ message: 'Email atau Password Salah' });
       }
-    }).catch((err) => res.json({ message: 'Username atau Password Salah' }));
+    }).catch((err) => res.json({ message: 'Email atau Password Salah' }));
+  },
+
+  verifyCustomerEmail: (req, res) => {
+    Customer.findOne({
+      where: {confirmationCode: req.params.confirmationCode}
+    })
+      .then((customer) => {
+        console.log(customer);
+        if (!customer) {
+          return res.status(404).send({ message: "User Not found." });
+        }
+        Customer.update({ status:"active" }, { where:{id: customer.id} });
+      })
+      .catch((e) => console.log("error", e));
   },
 
   whoami: (req, res) => res.json({
     id: req.user.id,
     nama_customer: req.user.nama_customer,
+    email_customer: req.user.email_customer,
     no_telepon: req.user.no_telepon,
     alamat: req.user.alamat 
   }),

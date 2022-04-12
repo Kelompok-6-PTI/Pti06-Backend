@@ -4,6 +4,7 @@ const authenticate = require('../middlewares/authenticate');
 const { auth } = require('../controllers');
 const { customer } = require('../controllers');
 
+const {validate, registerCustomerRules, updateCustomerRules} = require('../lib/validator.js');
 
 
 //Lihat Artikel dan Layanan
@@ -15,7 +16,7 @@ router.get('/get_all_layanan', customer.lihatLayanan.getAllLayanan);
 router.get('/get_layanan_by_id/:idLayanan', customer.lihatLayanan.getLayanan);
 
 //register
-router.post('/register_customer', customer.akunCustomer.register);
+router.post('/register_customer', registerCustomerRules(), validate, customer.akunCustomer.register);
 
 //-----------------------Endpoint dibawah dan setelahnya memiliki autentikasi-----------------------
 //Endpoint customer yg sudah login dan logout
@@ -23,7 +24,7 @@ router.get('/whoami', authenticate.customer, auth.customer.whoami);
 router.get('/logout', authenticate.customer, auth.customer.logout); 
 
 //Akun Costumer
-router.put('/update_customer/:id', authenticate.customer, customer.akunCustomer.update); 
+router.put('/update_customer/:id', authenticate.customer, updateCustomerRules(), validate, customer.akunCustomer.update); 
 
 //Pemesanan
 router.post('/buat_pesanan_ewallet', authenticate.customer, customer.pesanan.buatPesananEwallet); 

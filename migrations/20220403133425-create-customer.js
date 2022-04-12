@@ -13,6 +13,12 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      email_customer: {
+        unique: true,
+        allowNull: false,
+        validate: { isEmail: true },
+        type: Sequelize.STRING
+      },
       no_telepon: {
         allowNull: false,
         type: Sequelize.STRING
@@ -22,6 +28,14 @@ module.exports = {
       },
       password: {
         allowNull: false,
+        type: Sequelize.STRING
+      },
+      status: {
+        type: Sequelize.ENUM("pending", "active"),
+        defaultValue: "pending",
+      },
+      confirmationCode:{
+        unique: true,
         type: Sequelize.STRING
       },
       createdAt: {

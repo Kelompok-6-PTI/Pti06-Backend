@@ -1,5 +1,5 @@
 const { body, validationResult } = require('express-validator');
-const { Admin, Kategori_layanan, Layanan } = require('../../models');
+const { Admin, Kategori_layanan, Layanan, Customer } = require('../../models');
 
 const registerAdminRules = () => {
   return [
@@ -79,6 +79,38 @@ const layanan = () => {
   ]
 }
 
+const registerCustomerRules = () => {
+  return [
+    body('emailCustomer').isLength({ min: 1 }).withMessage('Email tidak boleh kosong').isEmail().withMessage('Format Harus Email').trim(),
+    body('emailCustomer').custom((value, {req, res}) => {
+      return Customer.findOne({ where: { email_customer: value } }).then(customer => {
+        if (customer) {
+          return Promise.reject('Email telah digunakan');
+        }
+      });
+    }),
+    body('namaCustomer', 'Nama tidak boleh kosong').isLength({ min: 1 }),
+    body('noTelepon', 'No Telepon tidak boleh kosong').isLength({ min: 1 }),
+    body('password', 'Password tidak boleh kosong').isLength({ min: 1 }),
+  ]
+}
+
+const updateCustomerRules = () => {
+  return [
+    body('emailCustomer').isLength({ min: 1 }).withMessage('Email tidak boleh kosong').isEmail().withMessage('Format Harus Email').trim(),
+    body('emailCustomer').custom((value, {req, res}) => {
+      return Customer.findOne({ where: { email_customer: value } }).then(customer => {
+        if (customer && customer.id != req.params.id) {
+          return Promise.reject('Email telah digunakan');
+        }
+      });
+    }),
+    body('namaCustomer', 'Nama tidak boleh kosong').isLength({ min: 1 }),
+    body('noTelepon', 'No Telepon tidak boleh kosong').isLength({ min: 1 }),
+
+  ]
+}
+
 module.exports = {
   updateAdminRules,
   registerAdminRules,
@@ -86,5 +118,7 @@ module.exports = {
   tambahKategoriRules,
   updateKategoriRules,
   layanan,
+  registerCustomerRules,
+  updateCustomerRules,
   validate,
 }

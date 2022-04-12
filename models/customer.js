@@ -29,23 +29,28 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     /* Method register Customer */
-    static async register({ namaCustomer, noTelepon, password }) {
+    static async register({ namaCustomer, emailCustomer, noTelepon, password }) {
+      const characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let confirmationCode = '';
+      for (let i = 0; i < 25; i++) {
+          confirmationCode += characters[Math.floor(Math.random() * characters.length )];
+      }
       const encryptedPassword = await this.encrypt(password);
       /*
         encrypt dari static method
         encryptedPassword akan sama dengan string hasil enkripsi password dari method encrypt
       */
-      return this.create({ nama_customer: namaCustomer, no_telepon: noTelepon, password: encryptedPassword });
+      return this.create({ nama_customer: namaCustomer, email_customer:emailCustomer, no_telepon: noTelepon, password: encryptedPassword, confirmationCode: confirmationCode });
     }
 
     /* Method update, untuk update Customer */
-    static async updateCustomer({ namaCustomer, noTelepon, alamat, password },id) {
+    static async updateCustomer({ namaCustomer, emailCustomer, noTelepon, alamat, password },id) {
       if (password != "") {
         const encryptedPassword = await this.encrypt(password);
-        return this.update({ nama_customer: namaCustomer, no_telepon: noTelepon, alamat: alamat, password: encryptedPassword }, { where:{id: id} });
+        return this.update({ nama_customer: namaCustomer, email_customer:emailCustomer, no_telepon: noTelepon, alamat: alamat, password: encryptedPassword }, { where:{id: id} });
       }
       else{
-        return this.update({ nama_customer: namaCustomer, no_telepon: noTelepon, alamat: alamat }, { where:{id: id} });
+        return this.update({ nama_customer: namaCustomer, email_customer:emailCustomer, no_telepon: noTelepon, alamat: alamat }, { where:{id: id} });
       }
       
     } 
@@ -53,9 +58,12 @@ module.exports = (sequelize, DataTypes) => {
   };
   Customer.init({
     nama_customer: DataTypes.STRING,
+    email_customer: DataTypes.STRING,
     no_telepon: DataTypes.STRING,
     alamat: DataTypes.TEXT,
-    password: DataTypes.STRING
+    password: DataTypes.STRING,
+    status: DataTypes.STRING,
+    confirmationCode: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Customer',
