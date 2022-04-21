@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const cookieParser = require("cookie-parser");
+var cors = require('cors')
 
 const PORT = process.env.PORT || 8000;
 
@@ -15,6 +16,10 @@ app.use(cookieParser());
 // gunakan library passport yang telah dibuat
 app.use(passport.initialize());
 
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}));
 
 const router = require('./src/routers');
 app.use(router);

@@ -21,4 +21,10 @@ module.exports = {
       .catch((err) => res.json(err));
   },
 
+  getCustomerbyid: (req, res) => {
+    Customer.findOne({ where: { id: req.params.idCustomer } })
+    .then((customer) => res.json(customer))
+    .catch((err) => res.json(err));
+  },
+
 };

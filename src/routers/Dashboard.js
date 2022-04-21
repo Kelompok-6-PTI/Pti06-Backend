@@ -5,7 +5,8 @@ const { auth } = require('../controllers');
 const { registerAdminRules, updateAdminRules, 
 		tambahKategoriRules, updateKategoriRules,
 		layanan,
-		artikel, 
+		artikel,
+		updateCustomerRules, 
 		validate } = require('../lib/validator.js');
 
 router.use(authenticate.admin);
@@ -44,7 +45,15 @@ router.put('/update_layanan/:idLayanan', layanan(), validate, dashboard.layanan.
 //endpoint management akun customer
 router.get('/get_all_customers', dashboard.akunCustomer.getAllCustomer);
 router.delete('/delete_customer/:idCustomer', dashboard.akunCustomer.delete);
-router.put('/update_costumer/:idCustomer', dashboard.akunCustomer.update);
+router.put('/update_costumer/:idCustomer', updateCustomerRules(), validate, dashboard.akunCustomer.update);
+router.get('/get_customer_by_id/:idCustomer', dashboard.akunCustomer.getCustomerbyid)
+
+//endpoint Pesanan
+router.get('/get_all_pesanan', dashboard.pesanan.getAllPesanan);
+router.get('/get_pesanan_ById/:idPesanan', dashboard.pesanan.getPesananById);
+router.get('/get_pesanans_costumer/:idCustomer', dashboard.pesanan.getPesanansCostumer);
+router.put('/pesanan_selesai_dicuci/:idPesanan', dashboard.pesanan.pesananSelesaiDicuci);
+router.put('/pesanan_sudah_dibayar/:idPesanan', dashboard.pesanan.pesananSudahDibayar);
 
 
 module.exports = router;

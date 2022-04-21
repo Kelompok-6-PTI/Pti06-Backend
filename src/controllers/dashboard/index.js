@@ -3,4 +3,5 @@ module.exports = {
   crudArtikel: require('./crudArtikel'),
   layanan: require('./layanan'),
   akunCustomer: require('./akunCustomer'),
+  pesanan: require('./pesanan'),
 };
