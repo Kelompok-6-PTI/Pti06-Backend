@@ -60,11 +60,11 @@ module.exports = {
       where: {confirmationCode: req.params.confirmationCode}
     })
       .then((customer) => {
-        console.log(customer);
         if (!customer) {
           return res.status(404).send({ message: "User Not found." });
         }
         Customer.update({ status:"active" }, { where:{id: customer.id} });
+        return res.json({message: "anda telah berhasil login"})
       })
       .catch((e) => console.log("error", e));
   },

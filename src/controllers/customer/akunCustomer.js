@@ -11,7 +11,7 @@ module.exports = {
               customer.email_customer,
               customer.confirmationCode
             );
-        return res.json({ msg: `Register Berhasil, Silahkan melakukan verifikasi melalui Email` });
+        return res.json({ msg: `Register Berhasil, Silahkan melakukan verifikasi akun melalui Email` });
         })
       .catch((err) => res.json(err));
   },

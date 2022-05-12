@@ -93,7 +93,9 @@ module.exports = (sequelize, DataTypes) => {
       return this.findOne({ where: { id: idPesanan } })
         .then((pesanan)=>{
           if (pesanan.metode_pembayaran == "Cash") {
-            return this.destroy({ where: {id: pesanan.id} });
+            if (pesanan.status_pembayaran == "Belum Dibayar") {
+              return this.destroy({ where: {id: pesanan.id} });
+            }
           }
           else if (pesanan.metode_pembayaran == "Ewallet"){
             return this.getInvoice(pesanan.invoice_id)

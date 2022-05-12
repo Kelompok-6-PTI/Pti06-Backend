@@ -32,6 +32,12 @@ module.exports = {
   	  .catch((err) => res.json(err));
   },
 
+  getInvoice: (req, res) => {
+    Pesanan.getInvoice(req.params.idInvoice)
+      .then( (invoice) => res.json(invoice))
+      .catch((e) => res.json(e) )
+  },
+
   
 
 };

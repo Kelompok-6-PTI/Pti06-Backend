@@ -54,6 +54,7 @@ router.get('/get_pesanan_ById/:idPesanan', dashboard.pesanan.getPesananById);
 router.get('/get_pesanans_costumer/:idCustomer', dashboard.pesanan.getPesanansCostumer);
 router.put('/pesanan_selesai_dicuci/:idPesanan', dashboard.pesanan.pesananSelesaiDicuci);
 router.put('/pesanan_sudah_dibayar/:idPesanan', dashboard.pesanan.pesananSudahDibayar);
+router.get('/get_invoice/:idInvoice', dashboard.pesanan.getInvoice);
 
 
 module.exports = router;
