@@ -42,6 +42,7 @@ module.exports = {
           .cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: false,
+            sameSite: 'none'
           })
           .status(200)
           .json({ message: 'Log in Berhasil' });
