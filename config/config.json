@@ -14,10 +14,10 @@
     "dialect": "postgres"
   },
   "production": {
-    "username": "postgres",
-    "password": "whatyourhopes123",
-    "database": "pti06_database_production",
-    "host": "127.0.0.1",
+    "username": "DATABASE_USERNAME",
+    "password": "DATABASE_PASSWORD",
+    "database": "DATABASE",
+    "host": "DATABASE_HOST",
     "dialect": "postgres"
   }
 }
