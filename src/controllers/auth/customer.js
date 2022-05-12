@@ -41,7 +41,7 @@ module.exports = {
           return res
           .cookie('accessToken', accessToken, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             sameSite: 'none'
           })
           .status(200)
