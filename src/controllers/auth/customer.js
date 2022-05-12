@@ -41,7 +41,7 @@ module.exports = {
           return res
           .cookie('accessToken', accessToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: false,
           })
           .status(200)
           .json({ message: 'Log in Berhasil' });
