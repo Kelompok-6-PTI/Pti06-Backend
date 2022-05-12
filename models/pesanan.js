@@ -5,7 +5,7 @@ const {
 
 const Xendit = require('xendit-node');
 const x = new Xendit({
-  secretKey: 'xnd_development_PnCkALuy6oWwgRnoiUHWn3n0bcYbtBSxse6gNrMOMoEffpJura0SSjvVFG4S',
+  secretKey: process.env.XENDIT_SECRETKEY,
 });
 
 const { Invoice } = x;
