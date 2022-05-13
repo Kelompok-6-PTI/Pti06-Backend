@@ -38,7 +38,7 @@ module.exports = {
             sameSite: 'none'
           })
           .status(200)
-          .json({ message: 'Log in Berhasil' });
+          .json({ message: 'Log in Berhasil', token: accessToken });
       }
       if (!match) {
         return res.json({ message: 'Username atau Password Salah' });
