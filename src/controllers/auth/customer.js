@@ -40,7 +40,7 @@ module.exports = {
         if (customer.status == "active") {
           return res
           .cookie('accessToken', accessToken, {
-            httpOnly: true,
+            httpOnly: false,
             secure: true,
             sameSite: 'none'
           })
